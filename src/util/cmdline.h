@@ -138,14 +138,6 @@ class CMDLine {
 				return default_value;
 			}
 		}
-		
-		const long int getValue(const std::string& parameter, const long int& default_value) {
-			if (hasParameter(parameter)) {
-				return atoi(value[parameter].c_str());
-			} else {
-				return default_value;
-			}
-		}
 
 		const int getValue(const std::string& parameter, const int& default_value) {
 			if (hasParameter(parameter)) {

@@ -37,7 +37,7 @@ struct dmatrix_file_header {
 	uint type_size;
 	uint num_rows;
 	uint num_cols;
-}; 
+};
 
 template <typename T> class DMatrix {
 	public:
@@ -45,7 +45,7 @@ template <typename T> class DMatrix {
 
 		std::vector<std::string> col_names;
 		uint dim1, dim2;
-		
+
 		T get(uint x, uint y) {
    			//assert((x < dim1) && (y < dim2));
 			return value[x][y];
@@ -53,26 +53,26 @@ template <typename T> class DMatrix {
 
 		DMatrix(uint p_dim1, uint p_dim2) {
 			dim1 = 0;
-			dim2 = 0;	
+			dim2 = 0;
 			value = NULL;
 			setSize(p_dim1, p_dim2);
 		}
-		
+
 		DMatrix() {
 			dim1 = 0;
-			dim2 = 0;	
+			dim2 = 0;
 			value = NULL;
 		}
-		
+
 		~DMatrix() {
 			if (value != NULL) {
 				MemoryLog::getInstance().logFree("dmatrix", sizeof(T*), dim1);
 				delete [] value[0];
 				MemoryLog::getInstance().logFree("dmatrix", sizeof(T), dim1*dim2);
 				delete [] value;
-			}	
+			}
 		}
-		
+
 		void assign(DMatrix<T>& v) {
 			if ((v.dim1 != dim1) || (v.dim2 != dim2)) { setSize(v.dim1, v.dim2); }
    			for (uint i = 0; i < dim1; i++) {
@@ -86,7 +86,7 @@ template <typename T> class DMatrix {
    				for (uint i2 = 0; i2 < dim2; i2++) {
    					value[i][i2] = v;
 				}
-   			}	
+   			}
    		}
 		void setSize(uint p_dim1, uint p_dim2) {
 			if ((p_dim1 == dim1) && (p_dim2 == dim2)) {
@@ -102,31 +102,31 @@ template <typename T> class DMatrix {
 			dim2 = p_dim2;
 			MemoryLog::getInstance().logNew("dmatrix", sizeof(T*), dim1);
 			value = new T*[dim1];
-			MemoryLog::getInstance().logNew("dmatrix", sizeof(T), dim1*dim2);	
+			MemoryLog::getInstance().logNew("dmatrix", sizeof(T), dim1*dim2);
 			value[0] = new T[dim1 * dim2];
 			for (unsigned i = 1; i < dim1; i++) {
 				value[i] = value[0] + i * dim2;
-			}			
+			}
 			col_names.resize(dim2);
 			for (unsigned i = 1; i < dim2; i++) {
 				col_names[i] = "";
-			}						
+			}
 		}
-		
+
 		T& operator() (unsigned x, unsigned y) {
    		//	assert((x < dim1) && (y < dim2));
-			return value[x][y];	
+			return value[x][y];
 		}
    		T operator() (unsigned x, unsigned y) const {
    		//	assert((x < dim1) && (y < dim2));
    			return value[x][y];
    		}
-   		
+
    		T* operator() (unsigned x) const {
    		//	assert((x < dim1));
    			return value[x];
    		}
-   		
+
    		void save(std::string filename, bool has_header = false) {
 		   	std::ofstream out_file (filename.c_str());
 			if (out_file.is_open())	{
@@ -135,8 +135,8 @@ template <typename T> class DMatrix {
 						if (i_2 > 0) {
 							out_file << "\t";
 						}
-						out_file << col_names[i_2];					
-					}	
+						out_file << col_names[i_2];
+					}
 					out_file << std::endl;
 				}
 				for (uint i_1 = 0; i_1 < dim1; i_1++) {
@@ -151,11 +151,11 @@ template <typename T> class DMatrix {
 				out_file.close();
 			} else {
 				std::cout << "Unable to open file " << filename;
-			}   			
+			}
    		}
 
 		void saveToBinaryFile(std::string filename) {
-			std::cout << "writing to " << filename << std::endl; std::cout.flush();
+			std::cout << "writing " << filename << std::endl; std::cout.flush();
 			std::ofstream out(filename.c_str(), std::ios_base::out | std::ios_base::binary);
 			if (out.is_open()) {
 				dmatrix_file_header fh;
@@ -195,7 +195,7 @@ template <typename T> class DMatrix {
 			std::ifstream in_file (filename.c_str());
 			if (! in_file.is_open()) {
 				throw "Unable to open file " + filename;
-			}	
+			}
 			for (uint i_1 = 0; i_1 < dim1; i_1++) {
 				for (uint i_2 = 0; i_2 < dim2; i_2++) {
 					T v;
@@ -204,8 +204,8 @@ template <typename T> class DMatrix {
 				}
 			}
 			in_file.close();
-		} 		
-   		
+		}
+
 };
 
 template <typename T> class DVector {
@@ -225,7 +225,7 @@ template <typename T> class DVector {
 			if (value != NULL) {
 				MemoryLog::getInstance().logFree("dvector", sizeof(T), dim);
 				delete [] value;
-			}	
+			}
 		}
 		T get(uint x) {
 			return value[x];
@@ -238,10 +238,10 @@ template <typename T> class DVector {
 			}
 			dim = p_dim;
 			MemoryLog::getInstance().logNew("dvector", sizeof(T), dim);
-			value = new T[dim];			
+			value = new T[dim];
 		}
 		T& operator() (unsigned x) {
-			return value[x];	
+			return value[x];
 		}
    		T operator() (unsigned x) const {
    			return value[x];
@@ -249,7 +249,7 @@ template <typename T> class DVector {
    		void init(T v) {
    			for (uint i = 0; i < dim; i++) {
    				value[i] = v;
-   			}	
+   			}
    		}
    		void assign(T* v) {
 			if (v->dim != dim) { setSize(v->dim); }
@@ -272,7 +272,7 @@ template <typename T> class DVector {
 				out_file.close();
 			} else {
 				std::cout << "Unable to open file " << filename;
-			}   			
+			}
    		}
 
 		void saveToBinaryFile(std::string filename) {
@@ -288,7 +288,7 @@ template <typename T> class DVector {
 				out.close();
 			} else {
 				std::cout << "Unable to open file " << filename;
-			}   			
+			}
    		}
 
 
@@ -296,7 +296,7 @@ template <typename T> class DVector {
 			std::ifstream in_file (filename.c_str());
 			if (! in_file.is_open()) {
 				throw "Unable to open file " + filename;
-			}	
+			}
 			for (uint i = 0; i < dim; i++) {
 				T v;
 				in_file >> v;
@@ -322,14 +322,14 @@ template <typename T> class DVector {
 				in.close();
 			} else {
 				std::cout << "Unable to open file " << filename;
-			}   			
+			}
 		}
 };
 
 
 class DVectorDouble : public DVector<double> {
 	public:
-		void init_normal(double mean, double stdev) {	
+		void init_normal(double mean, double stdev) {
 			for (uint i_2 = 0; i_2 < dim; i_2++) {
 				value[i_2] = ran_gaussian(mean, stdev);
 			}
@@ -338,14 +338,14 @@ class DVectorDouble : public DVector<double> {
 
 class DMatrixDouble : public DMatrix<double> {
 	public:
-		void init(double mean, double stdev) {	
+		void init(double mean, double stdev) {
 			for (uint i_1 = 0; i_1 < dim1; i_1++) {
 				for (uint i_2 = 0; i_2 < dim2; i_2++) {
 					value[i_1][i_2] = ran_gaussian(mean, stdev);
 				}
 			}
 		}
-		void init_column(double mean, double stdev, int column) {	
+		void init_column(double mean, double stdev, int column) {
 			for (uint i_1 = 0; i_1 < dim1; i_1++) {
 				value[i_1][column] = ran_gaussian(mean, stdev);
 			}
